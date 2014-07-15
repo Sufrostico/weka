@@ -18,3 +18,8 @@ doc/
 
 # backup files
 *~
+
+# vim files
+*.swp
+*.swo
+
