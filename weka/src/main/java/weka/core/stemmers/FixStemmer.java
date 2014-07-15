@@ -21,7 +21,13 @@
 
 package weka.core.stemmers;
 
+import java.util.Vector;
+import java.util.Enumeration;
+
+import weka.core.Option;
+import weka.core.OptionHandler;
 import weka.core.RevisionUtils;
+import weka.core.Utils;
 
 /**
  <!-- globalinfo-start -->
@@ -33,11 +39,91 @@ import weka.core.RevisionUtils;
  * @version   0.0.1 
  */
 public class FixStemmer 
-  implements Stemmer {
+  implements Stemmer, OptionHandler {
 
   /** for serialization */
   static final long serialVersionUID = -3671261636532625494L;
+
+  /** Length of the stem */
+  protected int m_length = 7;
+
+  /**
+   * Returns an enumeration of all the available options..
+   * 
+   * @return an enumeration of all available options.
+   */
+  @Override
+  public Enumeration<Option> listOptions() {
+    Vector<Option> result = new Vector<Option>();
+
+    result.addElement(new Option("\tLength of the stemm\n"
+      + "\t(default 7).", "stemmlength", 1,
+      "-stemmlength <value>"));
+
+    return result.elements();
+  }
   
+  /**
+   * Gets the current option settings for the OptionHandler.
+   * 
+   * @return the list of current option settings as an array of strings
+   */
+  @Override
+  public String[] getOptions() {
+    Vector<String> result = new Vector<String>();
+
+    result.add("-stemmlength");
+    result.add(getStemmlength()+"");
+
+    return result.toArray(new String[result.size()]);
+  }
+
+  /**
+   * Sets the OptionHandler's options using the given list. All options will be
+   * set (or reset) during this call (i.e. incremental setting of options is not
+   * possible).
+   * 
+   * @param options the list of options as an array of strings
+   * @throws Exception if an option is not supported
+   */
+  @Override
+  public void setOptions(String[] options) throws Exception {
+
+    String tmpStr = Utils.getOption("stemmlength", options);
+    if (tmpStr.length() != 0) {
+      setStemmlength(Integer.parseInt(tmpStr));
+    } else {
+      setStemmlength(7); // Default number always to 7
+    }
+  }
+
+  /**
+   * Get the value of delimiters (not backquoted).
+   * 
+   * @return Value of delimiters.
+   */
+  public int getStemmlength() {
+    return m_length;
+  }
+
+  /**
+   * --------
+   */
+  public void setStemmlength(int value) {
+    m_length = value;
+  }
+
+  /**
+   * Returns the tip text for this property
+   * 
+   * @return tip text for this property suitable for displaying in the
+   *         explorer/experimenter gui
+   */
+  public String stemmlengthTipText() {
+    return "Set of delimiter characters to use in tokenizing (\\r, \\n and \\t can be used for carriage-return, line-feed and tab)";
+  }
+
+
   /**
    * Returns a string describing the stemmer
    * @return a description suitable for
@@ -58,8 +144,8 @@ public class FixStemmer
 
     String result = new String(word);
 
-    if (word.length() > 7){
-      result = new String(word.substring(0,7));
+    if (word.length() > getStemmlength()) {
+      result = new String(word.substring(0,getStemmlength()));
     }
 
     return result;
