@@ -29,6 +29,7 @@ import java.util.Vector;
 import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.RevisionHandler;
+import weka.core.Utils;
 
 /**
  * A superclass for all tokenizer algorithms.
